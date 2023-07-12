@@ -1,13 +1,13 @@
-const router = require('express').Router(); // создали роутер
+const users = require('express').Router(); // создали роутер
 const { createUser, getUser, getAllUsers } = require('../controllers/users');
 
 // возвращает всех пользователей
-router.get('/', getAllUsers);
+users.get('/', getAllUsers);
 
 // возвращает пользователя по _id
-router.get('/:userId', getUser);
+users.get('/:userId', getUser);
 
 // создаёт пользователя
-router.post('/', createUser);
+users.post('/', createUser);
 
-module.exports = { router }; // экспортировали роутер
+module.exports = { users }; // экспортировали роутер
