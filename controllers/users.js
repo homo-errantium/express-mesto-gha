@@ -18,3 +18,33 @@ module.exports.getAllUsers = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => res.status(500).send(`error is ${err.message}`));
 };
+
+module.exports.updateUserInfo = (req, res) => {
+  const { name, about } = req.body;
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name, about },
+    {
+      new: true, // обработчик then получит на вход обновлённую запись
+      runValidators: true, // данные будут валидированы перед изменением
+      // upsert: true, // если пользователь не найден, он будет создан
+    }
+  )
+    .then((user) => res.send({ data: user }))
+    .catch((err) => res.status(500).send(`error is ${err.message}`));
+};
+
+module.exports.updateUserAvatar = (req, res) => {
+  const { avatar } = req.body;
+  User.findByIdAndUpdate(
+    req.user._id,
+    { avatar },
+    {
+      new: true, // обработчик then получит на вход обновлённую запись
+      runValidators: true, // данные будут валидированы перед изменением
+      // upsert: true, // если пользователь не найден, он будет создан
+    }
+  )
+    .then((user) => res.send({ data: user }))
+    .catch((err) => res.status(500).send(`error is ${err.message}`));
+};
