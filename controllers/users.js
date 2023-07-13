@@ -19,7 +19,9 @@ module.exports.createUser = (req, res) => {
           message: 'Переданы некорректные данные при создании пользователя.',
         });
       }
-      res.status(SERVER_ERROR_CODE).send({ message: 'Ошибка по умолчанию' });
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: 'Ошибка по умолчанию' });
     });
 };
 
@@ -42,7 +44,9 @@ module.exports.getUser = (req, res) => {
           .status(BAD_REQUEST_CODE)
           .send({ message: 'Введены некорректные данные' });
       }
-      res.status(SERVER_ERROR_CODE).send({ message: 'Ошибка по умолчанию.' });
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: 'Ошибка по умолчанию.' });
     });
 };
 
@@ -51,7 +55,9 @@ module.exports.getAllUsers = (req, res) => {
     .orFail()
     .then((user) => res.status(SUCCES_CODE).send({ data: user }))
     .catch((err) => {
-      res.status(SERVER_ERROR_CODE).send({ message: 'Ошибка по умолчанию.' });
+      res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: `Ошибка по умолчанию. код ${err}` });
     });
 };
 
@@ -66,7 +72,7 @@ module.exports.updateUserInfo = (req, res) => {
       new: true, // обработчик then получит на вход обновлённую запись
       runValidators: true, // данные будут валидированы перед изменением
       // upsert: true, // если пользователь не найден, он будет создан
-    }
+    },
   )
     // .orFail(new Error('BadRequest'))
     .then((user) => res.status(SUCCES_CODE).send({ data: user }))
@@ -81,7 +87,9 @@ module.exports.updateUserInfo = (req, res) => {
           .status(NOT_FOUND_CODE)
           .send({ message: 'Пользователь по указанному _id не найден.' });
       }
-      res.status(SERVER_ERROR_CODE).send({ message: 'Ошибка по умолчанию.' });
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: 'Ошибка по умолчанию.' });
     });
 };
 
@@ -97,7 +105,7 @@ module.exports.updateUserAvatar = (req, res) => {
       new: true, // обработчик then получит на вход обновлённую запись
       runValidators: true, // данные будут валидированы перед изменением
       // upsert: true, // если пользователь не найден, он будет создан
-    }
+    },
   )
     .then((user) => res.status(SUCCES_CODE).send({ data: user }))
     .catch((err) => {
@@ -111,6 +119,8 @@ module.exports.updateUserAvatar = (req, res) => {
           .status(NOT_FOUND_CODE)
           .send({ message: 'Пользователь по указанному _id не найден.' });
       }
-      res.status(SERVER_ERROR_CODE).send({ message: 'Ошибка по умолчанию.' });
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: 'Ошибка по умолчанию.' });
     });
 };
