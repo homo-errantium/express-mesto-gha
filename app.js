@@ -14,10 +14,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const { users } = require('./routes/users');
 const { cards } = require('./routes/cards');
 
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose
+  .connect('mongodb://127.0.0.1:27017/mestodb', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log('Подключение к БД настроено');
+  })
+  .catch(() => {
+    console.log('Подключения к БД нет');
+  });
 
 app.use((req, res, next) => {
   req.user = {

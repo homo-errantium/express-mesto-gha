@@ -24,6 +24,10 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String, // имя — это строка
     required: true,
+    // validate: {
+    //   validator: (url) => validator.isURL(url),
+    //   message: 'URL адрес некорректный',
+    // },
   },
   createdAt: {
     type: Date,
