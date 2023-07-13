@@ -88,7 +88,7 @@ module.exports.dislikeCard = (req, res) =>
   )
     .then((card) => res.status(SUCCES_CODE).send({ data: card }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
         return res.status(BAD_REQUEST_CODE).send({
           message: 'Переданы некорректные данные для снятии лайка',
         });
