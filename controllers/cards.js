@@ -86,6 +86,7 @@ module.exports.dislikeCard = (req, res) =>
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true }
   )
+    .orFail()
     .then((card) => res.status(SUCCES_CODE).send({ data: card }))
     .catch((err) => {
       if (err.name === 'CastError') {
