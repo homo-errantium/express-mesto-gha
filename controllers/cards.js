@@ -64,7 +64,7 @@ module.exports.likeCard = (req, res) =>
     .orFail()
     .then((card) => res.status(SUCCES_CODE).send({ data: card }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
         return res.status(BAD_REQUEST_CODE).send({
           message: 'Переданы некорректные данные для постановки лайка',
         });
@@ -74,7 +74,9 @@ module.exports.likeCard = (req, res) =>
           .status(NOT_FOUND_CODE)
           .send({ message: 'Передан несуществующий _id карточки.' });
       }
-      res.status(SERVER_ERROR_CODE).send({ message: 'Ошибка по умолчанию.' });
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: 'Ошибка по умолчанию.' });
     });
 
 //  404 — Передан несуществующий _id карточки. 500 — Ошибка по умолчанию.
@@ -84,9 +86,9 @@ module.exports.dislikeCard = (req, res) =>
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true }
   )
-    .then((card) => res.status(200).send({ data: card }))
+    .then((card) => res.status(SUCCES_CODE).send({ data: card }))
     .catch((err) => {
-      if (err.kind === 'ValidationError') {
+      if (err.name === 'ValidationError') {
         return res.status(BAD_REQUEST_CODE).send({
           message: 'Переданы некорректные данные для снятии лайка',
         });
