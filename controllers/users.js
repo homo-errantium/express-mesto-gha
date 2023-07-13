@@ -38,7 +38,6 @@ module.exports.getUser = (req, res) => {
           .send({ message: 'Пользователь по указанному _id не найден.' });
       }
       // если введены некорректные данные
-      // if (err.kind === 'ObjectID') {
       if (err.name === 'CastError') {
         return res
           .status(BAD_REQUEST_CODE)
@@ -72,7 +71,7 @@ module.exports.updateUserInfo = (req, res) => {
       new: true, // обработчик then получит на вход обновлённую запись
       runValidators: true, // данные будут валидированы перед изменением
       // upsert: true, // если пользователь не найден, он будет создан
-    },
+    }
   )
     // .orFail(new Error('BadRequest'))
     .then((user) => res.status(SUCCES_CODE).send({ data: user }))
@@ -105,7 +104,7 @@ module.exports.updateUserAvatar = (req, res) => {
       new: true, // обработчик then получит на вход обновлённую запись
       runValidators: true, // данные будут валидированы перед изменением
       // upsert: true, // если пользователь не найден, он будет создан
-    },
+    }
   )
     .then((user) => res.status(SUCCES_CODE).send({ data: user }))
     .catch((err) => {
