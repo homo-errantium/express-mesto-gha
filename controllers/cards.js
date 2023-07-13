@@ -27,9 +27,13 @@ module.exports.createCard = (req, res) => {
 
 // 404 — Карточка с указанным _id не найдена.
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findByIdAndRemove(req.params.cardId, {
+    new: true, // обработчик then получит на вход обновлённую запись
+    runValidators: true, // данные будут валидированы перед изменением
+    // upsert: true, // если пользователь не найден, он будет создан
+  })
     .orFail()
-    .then((card) => res.status(200).send({ data: card }))
+    .then((card) => res.status(SUCCES_CODE).send({ data: card }))
     .catch((err) => {
       // если пользователь с данным id не найден
       if (err.name === 'DocumentNotFoundError') {

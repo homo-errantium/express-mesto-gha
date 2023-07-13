@@ -13,6 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const { users } = require('./routes/users');
 const { cards } = require('./routes/cards');
+const { wrongRouter } = require('./routes/wrongRoutes');
 
 mongoose
   .connect('mongodb://127.0.0.1:27017/mestodb', {
@@ -35,6 +36,7 @@ app.use((req, res, next) => {
 });
 app.use('/users', users);
 app.use('/cards', cards);
+app.use('*', wrongRouter);
 
 app.listen(PORT, () => {
   console.log(`port is ${PORT}`);
