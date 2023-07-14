@@ -35,7 +35,6 @@ module.exports.deleteCard = (req, res) => {
     .orFail()
     .then((card) => res.status(SUCCES_CODE).send({ data: card }))
     .catch((err) => {
-      // если пользователь с данным id не найден
       if (err.name === 'DocumentNotFoundError') {
         return res
           .status(NOT_FOUND_CODE)
@@ -54,8 +53,14 @@ module.exports.deleteCard = (req, res) => {
 };
 
 module.exports.getAllCards = (req, res) => {
-  Card.find({})
-    .orFail()
+  Card.find(
+    {},
+    {
+      new: true, // обработчик then получит на вход обновлённую запись
+      runValidators: true, // данные будут валидированы перед изменением
+      // upsert: true, // если пользователь не найден, он будет создан
+    },
+  )
     .then((cards) => res.status(SUCCES_CODE).send({ data: cards }))
     .catch((err) => {
       res
