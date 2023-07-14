@@ -1,4 +1,3 @@
-const helmet = require('helmet');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -27,15 +26,13 @@ mongoose
     console.log('Подключения к БД нет');
   });
 
-app.use(
-  helmet((req, res, next) => {
-    req.user = {
-      _id: '64adb830947f33d9aa229096',
-    };
+app.use((req, res, next) => {
+  req.user = {
+    _id: '64adb830947f33d9aa229096',
+  };
 
-    next();
-  }),
-);
+  next();
+});
 app.use('/users', users);
 app.use('/cards', cards);
 app.use('*', wrongRouter);
