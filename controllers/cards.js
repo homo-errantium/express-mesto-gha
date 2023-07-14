@@ -60,9 +60,8 @@ module.exports.getAllCards = (req, res) => {
       new: true,
       runValidators: true,
       // upsert: true, // если пользователь не найден, он будет создан
-    }
+    },
   )
-    .orFail()
     .then((card) => res.status(SUCCES_CODE).send(card))
     .catch((err) => {
       res
@@ -72,51 +71,49 @@ module.exports.getAllCards = (req, res) => {
 };
 
 // 400 — Переданы некорректные данные для постановки/снятии лайка...
-module.exports.likeCard = (req, res) =>
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
-    { new: true }
-  )
-    .orFail()
-    .then((card) => res.status(SUCCES_CODE).send({ data: card }))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        return res.status(BAD_REQUEST_CODE).send({
-          message: 'Переданы некорректные данные для постановки лайка',
-        });
-      }
-      if (err.name === 'DocumentNotFoundError') {
-        return res
-          .status(NOT_FOUND_CODE)
-          .send({ message: 'Передан несуществующий _id карточки.' });
-      }
+module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
+  req.params.cardId,
+  { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
+  { new: true },
+)
+  .orFail()
+  .then((card) => res.status(SUCCES_CODE).send({ data: card }))
+  .catch((err) => {
+    if (err.name === 'CastError') {
+      return res.status(BAD_REQUEST_CODE).send({
+        message: 'Переданы некорректные данные для постановки лайка',
+      });
+    }
+    if (err.name === 'DocumentNotFoundError') {
       return res
-        .status(SERVER_ERROR_CODE)
-        .send({ message: 'Ошибка по умолчанию.' });
-    });
+        .status(NOT_FOUND_CODE)
+        .send({ message: 'Передан несуществующий _id карточки.' });
+    }
+    return res
+      .status(SERVER_ERROR_CODE)
+      .send({ message: 'Ошибка по умолчанию.' });
+  });
 
 //  404 — Передан несуществующий _id карточки. 500 — Ошибка по умолчанию.
-module.exports.dislikeCard = (req, res) =>
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $pull: { likes: req.user._id } }, // убрать _id из массива
-    { new: true }
-  )
-    .orFail()
-    .then((card) => res.status(SUCCES_CODE).send({ data: card }))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        return res.status(BAD_REQUEST_CODE).send({
-          message: 'Переданы некорректные данные для снятии лайка',
-        });
-      }
-      if (err.name === 'DocumentNotFoundError') {
-        return res
-          .status(NOT_FOUND_CODE)
-          .send({ message: 'Передан несуществующий _id карточки.' });
-      }
+module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
+  req.params.cardId,
+  { $pull: { likes: req.user._id } }, // убрать _id из массива
+  { new: true },
+)
+  .orFail()
+  .then((card) => res.status(SUCCES_CODE).send({ data: card }))
+  .catch((err) => {
+    if (err.name === 'CastError') {
+      return res.status(BAD_REQUEST_CODE).send({
+        message: 'Переданы некорректные данные для снятии лайка',
+      });
+    }
+    if (err.name === 'DocumentNotFoundError') {
       return res
-        .status(SERVER_ERROR_CODE)
-        .send({ message: 'Ошибка по умолчанию.' });
-    });
+        .status(NOT_FOUND_CODE)
+        .send({ message: 'Передан несуществующий _id карточки.' });
+    }
+    return res
+      .status(SERVER_ERROR_CODE)
+      .send({ message: 'Ошибка по умолчанию.' });
+  });
