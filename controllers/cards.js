@@ -27,20 +27,16 @@ module.exports.createCard = (req, res) => {
 
 // 404 — Карточка с указанным _id не найдена.
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId, {
-    new: true, // обработчик then получит на вход обновлённую запись
-    runValidators: true, // данные будут валидированы перед изменением
-    // upsert: true, // если пользователь не найден, он будет создан
-  })
-    .orFail()
-    .then((card) => res.status(SUCCES_CODE).send({ data: card }))
-    .catch((err) => {
-      // если пользователь с данным id не найден
-      if (err.name === 'DocumentNotFoundError') {
-        return res
+  Card.findByIdAndRemove(req.params.cardId)
+    .then((card) => {
+      if (!card) {
+        res
           .status(NOT_FOUND_CODE)
           .send({ message: 'Карточка с указанным _id не найдена' });
       }
+      return res.status(SUCCES_CODE).send(card);
+    })
+    .catch((err) => {
       // если введены некорректные данные
       if (err.name === 'CastError') {
         return res
