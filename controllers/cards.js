@@ -56,7 +56,7 @@ module.exports.deleteCard = (req, res) => {
 module.exports.getAllCards = (req, res) => {
   Card.find({})
     .orFail()
-    .then((user) => res.status(SUCCES_CODE).send({ data: user }))
+    .then((card) => res.status(SUCCES_CODE).send({ data: card }))
     .catch((err) => {
       res
         .status(SERVER_ERROR_CODE)
