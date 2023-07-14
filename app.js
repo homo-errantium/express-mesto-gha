@@ -1,9 +1,9 @@
-// const path = require('path');
+const helmet = require('helmet');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
-const { PORT = 3000 } = process.env;
+const { PORT, DB_URL } = require('./utils/constants');
 
 const app = express();
 
@@ -16,7 +16,7 @@ const { cards } = require('./routes/cards');
 const { wrongRouter } = require('./routes/wrongRoutes');
 
 mongoose
-  .connect('mongodb://127.0.0.1:27017/mestodb', {
+  .connect(DB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -27,16 +27,18 @@ mongoose
     console.log('Подключения к БД нет');
   });
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '64adb830947f33d9aa229096',
-  };
+app.use(
+  helmet((req, res, next) => {
+    req.user = {
+      _id: '64adb830947f33d9aa229096',
+    };
 
-  next();
-});
-app.use('/users', users);
-app.use('/cards', cards);
-app.use('*', wrongRouter);
+    next();
+  }),
+);
+app.use(helmet('/users', users));
+app.use(helmet('/cards', cards));
+app.use(helmet('*', wrongRouter));
 
 app.listen(PORT, () => {
   console.log(`port is ${PORT}`);

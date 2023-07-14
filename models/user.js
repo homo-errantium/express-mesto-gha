@@ -1,23 +1,32 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
-const userSchema = new mongoose.Schema({
-  name: { // у пользователя есть имя — опишем требования к имени в схеме:
-    type: String, // имя — это строка
-    required: true, // оно должно быть у каждого пользователя, так что имя — обязательное поле
-    minlength: 2, // минимальная длина имени — 2 символа
-    maxlength: 30, // а максимальная — 30 символов
-  },
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      // у пользователя есть имя — опишем требования к имени в схеме:
+      type: String, // имя — это строка
+      required: [true, 'Поле "name" должно быть заполнено'],
+      minlength: [2, 'Минимальная длина поля "name" - 2'],
+      maxlength: [30, 'Максимальная длина поля "name" - 30'],
+    },
 
-  about: {
-    type: String, // имя — это строка
-    required: true, // оно должно быть у каждого пользователя, так что имя — обязательное поле
-    minlength: 2, // минимальная длина имени — 2 символа
-    maxlength: 30, // а максимальная — 30 символов
+    about: {
+      type: String, // имя — это строка
+      required: [true, 'Поле "about" должно быть заполнено'],
+      minlength: [2, 'Минимальная длина поля "about" - 2'],
+      maxlength: [30, 'Максимальная длина поля "about" - 30'],
+    },
+    avatar: {
+      type: String, // имя — это строка
+      required: [true, 'Поле "avatar" должно быть заполнено'],
+      validate: {
+        validator: (v) => validator.isURL(v),
+        message: 'Некорректный URL',
+      },
+    },
   },
-  avatar: {
-    type: String, // имя — это строка
-    required: true,
-  },
-});
+  { versionKey: false },
+);
 
 module.exports = mongoose.model('user', userSchema);
