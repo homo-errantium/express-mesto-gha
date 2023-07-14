@@ -36,9 +36,9 @@ app.use(
     next();
   }),
 );
-app.use(helmet('/users', users));
-app.use(helmet('/cards', cards));
-app.use(helmet('*', wrongRouter));
+app.use('/users', users);
+app.use('/cards', cards);
+app.use('*', wrongRouter);
 
 app.listen(PORT, () => {
   console.log(`port is ${PORT}`);
