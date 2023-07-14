@@ -54,15 +54,9 @@ module.exports.deleteCard = (req, res) => {
 };
 
 module.exports.getAllCards = (req, res) => {
-  Card.find(
-    {},
-    {
-      new: true,
-      runValidators: true,
-      // upsert: true, // если пользователь не найден, он будет создан
-    },
-  )
-    .then((card) => res.status(SUCCES_CODE).send(card))
+  Card.find({})
+    .orFail()
+    .then((cards) => res.status(SUCCES_CODE).send({ data: cards }))
     .catch((err) => {
       res
         .status(SERVER_ERROR_CODE)
