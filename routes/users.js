@@ -4,7 +4,7 @@ const {
   getAllUsers,
   updateUserAvatar,
   updateUserInfo,
-  getInfoAboutMe,
+  getCurrentUser,
 } = require('../controllers/users');
 
 // возвращает всех пользователей
@@ -14,7 +14,7 @@ users.get('/', getAllUsers);
 users.get('/:userId', getUser);
 
 // возвращает информацию о пользователе
-users.get('/me', getInfoAboutMe);
+users.get('/me', getCurrentUser);
 
 // обновляет информацию о пользователе
 users.patch('/me', updateUserInfo);
