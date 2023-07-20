@@ -27,29 +27,37 @@ module.exports.createCard = (req, res) => {
 
 // 404 — Карточка с указанным _id не найдена.
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId, {
-    new: true, // обработчик then получит на вход обновлённую запись
-    runValidators: true,
-    // upsert: true, // если пользователь не найден, он будет создан
-  })
-    .orFail()
-    .then((card) => res.status(SUCCES_CODE).send({ data: card }))
-    .catch((err) => {
-      if (err.name === 'DocumentNotFoundError') {
+  if (req.params.owner === req.user._id) {
+    Card.findByIdAndRemove(req.params.cardId, {
+      new: true, // обработчик then получит на вход обновлённую запись
+      runValidators: true,
+      // upsert: true, // если пользователь не найден, он будет создан
+    })
+      .orFail()
+      .then((card) => res.status(SUCCES_CODE).send({ data: card }))
+      .catch((err) => {
+        if (err.name === 'DocumentNotFoundError') {
+          return res
+            .status(NOT_FOUND_CODE)
+            .send({ message: 'Карточка с указанным _id не найдена' });
+        }
+        // если введены некорректные данные
+        if (err.name === 'CastError') {
+          return res
+            .status(BAD_REQUEST_CODE)
+            .send({ message: 'Введены некорректные данные' });
+        }
         return res
-          .status(NOT_FOUND_CODE)
-          .send({ message: 'Карточка с указанным _id не найдена' });
-      }
-      // если введены некорректные данные
-      if (err.name === 'CastError') {
-        return res
-          .status(BAD_REQUEST_CODE)
-          .send({ message: 'Введены некорректные данные' });
-      }
-      return res
-        .status(SERVER_ERROR_CODE)
-        .send({ message: 'Ошибка по умолчанию.' });
-    });
+          .status(SERVER_ERROR_CODE)
+          .send({ message: 'Ошибка по умолчанию.' });
+      });
+  } else {
+    res
+      .status(SUCCES_CODE)
+      .send({
+        message: 'У вас недостаточно прав для совершения данной операции',
+      });
+  }
 };
 
 module.exports.getAllCards = (req, res) => {

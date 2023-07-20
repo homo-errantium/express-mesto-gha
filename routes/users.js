@@ -1,10 +1,10 @@
 const users = require('express').Router(); // создали роутер
 const {
-  createUser,
   getUser,
   getAllUsers,
   updateUserAvatar,
   updateUserInfo,
+  getInfoAboutMe,
 } = require('../controllers/users');
 
 // возвращает всех пользователей
@@ -13,8 +13,8 @@ users.get('/', getAllUsers);
 // возвращает пользователя по _id
 users.get('/:userId', getUser);
 
-// создаёт пользователя
-users.post('/', createUser);
+// возвращает информацию о пользователе
+users.get('/me', getInfoAboutMe);
 
 // обновляет информацию о пользователе
 users.patch('/me', updateUserInfo);
