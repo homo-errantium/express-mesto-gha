@@ -1,9 +1,9 @@
+/* eslint-disable no-useless-escape */
 // const validator = require('validator');
 const BadRequestError = require('../../errors/BadRequestError');
 
 module.exports.validationUrl = (url) => {
-  const regex =
-    /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/;
+  const regex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/;
   const isValidUrl = regex.test(url);
   // const isValidUrl = validator.isUrl(url);
   if (isValidUrl) {
