@@ -6,8 +6,7 @@ const AuthError = require('../errors/AuthError');
 const userSchema = new mongoose.Schema(
   {
     name: {
-      type: String, // имя — это строка
-      // required: [true, 'Поле "name" должно быть заполнено'],
+      type: String,
       minlength: [2, 'Минимальная длина поля "name" - 2'],
       maxlength: [30, 'Максимальная длина поля "name" - 30'],
       default: 'Жак-Ив Кусто',
@@ -15,14 +14,12 @@ const userSchema = new mongoose.Schema(
 
     about: {
       type: String, // имя — это строка
-      // required: [true, 'Поле "about" должно быть заполнено'],
       minlength: [2, 'Минимальная длина поля "about" - 2'],
       maxlength: [30, 'Максимальная длина поля "about" - 30'],
       default: 'Исследователь',
     },
     avatar: {
-      type: String, // имя — это строка
-      // required: [true, 'Поле "avatar" должно быть заполнено'],
+      type: String,
       validate: {
         validator: (v) => validator.isURL(v),
         message: 'Некорректный URL',
@@ -46,7 +43,7 @@ const userSchema = new mongoose.Schema(
       select: false,
     },
   },
-  { versionKey: false },
+  { versionKey: false }
 );
 
 // eslint-disable-next-line func-names
