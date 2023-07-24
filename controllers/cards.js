@@ -24,24 +24,31 @@ module.exports.createCard = (req, res, next) => {
 
 // 404 — Карточка с указанным _id не найдена.
 module.exports.deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId, {
+  Card.findById(req.params.cardId, {
     new: true,
     runValidators: true,
   })
     .orFail()
-    .then((card) => res.status(SUCCES_CODE).send({ data: card }))
+    .then((card) => {
+      const owner = card.owner.toString();
+      if (req.user._id === owner) {
+        Card.deleteOne(card)
+          .then(() => {
+            res.status(SUCCES_CODE).send({ data: card });
+          })
+          .catch(next);
+      } else {
+        throw new ForbiddenError(
+          'У Вас недостаточно прав для совершения данной операции.',
+        );
+      }
+    })
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
         throw new NotFoundError('Карточка с указанным _id не найдена');
       }
-      // если введены некорректные данные
       if (err.name === 'CastError') {
         throw new BadRequestError('Введены некорректные данные');
-      }
-      if (req.params.owner !== req.user._id) {
-        throw new ForbiddenError(
-          'У Вас недостаточно прав для совершения данной операции.',
-        );
       }
       return new ServerError('Ошибка по умолчанию');
     })

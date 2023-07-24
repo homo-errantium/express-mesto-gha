@@ -5,7 +5,8 @@ const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
 const ServerError = require('../errors/ServerError');
 const AuthError = require('../errors/AuthError');
-const DuplicateError = require('../errors/DuplicateError');
+// const DuplicateError = require('../errors/DuplicateError');
+const ConflictError = require('../errors/ConflictError');
 const {
   BAD_REQUEST_CODE,
   CREATE_CODE,
@@ -27,12 +28,16 @@ module.exports.createUser = (req, res, next) => {
       email,
       password: hash,
     }))
-    .then((user) => res.status(CREATE_CODE).send({ _id: user._id, email: user.email }))
+    .then((user) => res.status(CREATE_CODE).send({
+      email: user.email,
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
+      _id: user._id,
+    }))
     .catch((err) => {
       if (err.code === 11000) {
-        return next(
-          new DuplicateError('Пользователь с данным email уже существует'),
-        );
+        throw new ConflictError('Пользователь с данным email уже существует');
       }
 
       if (err.name === 'ValidationError') {
