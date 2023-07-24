@@ -12,15 +12,17 @@ This project is a back-end platform for the place site ([link to the front-end p
 
 ### **About technologies used**
 
-This server was developed in the Node.js environment using the Express framework. MongoDB was used as the database, mongoose was used to implement the API. Implemented processing of various requests (CRUD) to various database collections. Endpoint navigation is based on route. The code is fully structured and modularized for easy maintenance and development. Adding script scripts for easy launch, including development mode. Also added the ability to edit code based on the Eslint format (separate scripts for checking and fixing the style code). Autotests have been added to the project for quick verification.
+This server was developed in the Node.js environment using the Express framework. MongoDB was used as the database, mongoose was used to implement the API. Implemented processing of various requests (CRUD) to various database collections. Endpoint navigation is based on route. There is a server-side security check: user data is protected by celebrate, helmet and custom validation modules, which increases the security of the site and the safety of user data. Encryption is provided with additional factors that protect the site from cross-scripting and cross-site threats. The code is fully structured and modularized for easy maintenance and development. Adding script scripts for easy launch, including development mode. Also added the ability to edit code based on the Eslint format (separate scripts for checking and fixing the style code). Autotests have been added to the project for quick verification.
 
 list of technologies:
 
 - Node.js
-- Express
+- express
 - mongoose
 - eslint
 - middleware
+- joi/celebrate
+- helmet
 
 ## Directories
 
