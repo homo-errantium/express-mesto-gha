@@ -24,10 +24,7 @@ module.exports.createCard = (req, res, next) => {
 
 // 404 — Карточка с указанным _id не найдена.
 module.exports.deleteCard = (req, res, next) => {
-  Card.findById(req.params.cardId, {
-    new: true,
-    runValidators: true,
-  })
+  Card.findById(req.params.cardId)
     .orFail()
     .then((card) => {
       const owner = card.owner.toString();

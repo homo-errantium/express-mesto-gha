@@ -104,9 +104,9 @@ module.exports.getAllUsers = (req, res, next) => {
   User.find({})
     .orFail()
     .then((user) => res.status(SUCCES_CODE).send({ data: user }))
-    .catch((err) => {
-      throw new ServerError(err.message);
-    })
+    // .catch((err) => {
+    //   throw new ServerError(err.message);
+    // })
     .catch(next);
 };
 
