@@ -5,7 +5,7 @@ const NotFoundError = require('../errors/NotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
 const { CREATE_CODE, SUCCES_CODE } = require('../utils/constants');
 
-// 400 — Переданы некорректные данные при создании карточки. 500 — Ошибка по умолчанию.
+// 400 — Переданы некорректные данные при создании карточки. 500 — На сервере произошла ошибка.
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
@@ -17,7 +17,7 @@ module.exports.createCard = (req, res, next) => {
           'Переданы некорректные данные при создании карточки.',
         );
       }
-      return new ServerError('Ошибка по умолчанию');
+      return new ServerError('На сервере произошла ошибка');
     })
     .catch(next);
 };
@@ -48,7 +48,7 @@ module.exports.deleteCard = (req, res, next) => {
       if (err.name === 'CastError') {
         throw new BadRequestError('Введены некорректные данные');
       }
-      return new ServerError('Ошибка по умолчанию');
+      return new ServerError('На сервере произошла ошибка');
     })
     .catch(next);
 };
@@ -86,11 +86,11 @@ module.exports.likeCard = (req, res, next) => Card.findByIdAndUpdate(
     if (err.name === 'DocumentNotFoundError') {
       throw new NotFoundError('Передан несуществующий _id карточки.');
     }
-    return new ServerError('Ошибка по умолчанию');
+    return new ServerError('На сервере произошла ошибка');
   })
   .catch(next);
 
-//  404 — Передан несуществующий _id карточки. 500 — Ошибка по умолчанию.
+//  404 — Передан несуществующий _id карточки. 500 — На сервере произошла ошибка.
 module.exports.dislikeCard = (req, res, next) => Card.findByIdAndUpdate(
   req.params.cardId,
   { $pull: { likes: req.user._id } }, // убрать _id из массива
@@ -107,6 +107,6 @@ module.exports.dislikeCard = (req, res, next) => Card.findByIdAndUpdate(
     if (err.name === 'DocumentNotFoundError') {
       throw new NotFoundError('Передан несуществующий _id карточки.');
     }
-    return new ServerError('Ошибка по умолчанию');
+    return new ServerError('На сервере произошла ошибка');
   })
   .catch(next);

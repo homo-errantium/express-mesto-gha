@@ -11,9 +11,10 @@ const {
   BAD_REQUEST_CODE,
   CREATE_CODE,
   SUCCES_CODE,
+  secretKey,
 } = require('../utils/constants');
 
-// 400 — Переданы некорректные данные при создании пользователя. 500 — Ошибка по умолчанию.
+// 400 — Переданы некорректные данные при создании пользователя. 500 — На сервере произошла ошибка.
 
 module.exports.createUser = (req, res, next) => {
   const {
@@ -45,7 +46,7 @@ module.exports.createUser = (req, res, next) => {
           'Переданы некорректные данные при создании пользователя.',
         );
       }
-      return new ServerError('Ошибка по умолчанию');
+      return new ServerError('На сервере произошла ошибка');
     })
     .catch(next);
 };
@@ -54,7 +55,7 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'some-secret-key', {
+      const token = jwt.sign({ _id: user._id }, secretKey, {
         expiresIn: '7d',
       });
       res.send({ token });
@@ -76,12 +77,12 @@ module.exports.getCurrentUser = (req, res, next) => {
       if (err.name === 'CastError') {
         throw new BadRequestError('Введены некорректные данные');
       }
-      return new ServerError('Ошибка по умолчанию');
+      return new ServerError('На сервере произошла ошибка');
     })
     .catch(next);
 };
 
-// 404 — Пользователь по указанному _id не найден. 500 — Ошибка по умолчанию.
+// 404 — Пользователь по указанному _id не найден. 500 — На сервере произошла ошибка.
 module.exports.getUser = (req, res, next) => {
   User.findById(req.params.userId)
     .orFail()
@@ -95,7 +96,7 @@ module.exports.getUser = (req, res, next) => {
       if (err.name === 'CastError') {
         throw new BadRequestError('Введены некорректные данные');
       }
-      return new ServerError('Ошибка по умолчанию');
+      return new ServerError('На сервере произошла ошибка');
     })
     .catch(next);
 };
@@ -111,7 +112,7 @@ module.exports.getAllUsers = (req, res, next) => {
 };
 
 // 400 — Переданы некорректные данные при обновлении профиля.
-// 404 — Пользователь с указанным _id не найден. 500 — Ошибка по умолчанию.
+// 404 — Пользователь с указанным _id не найден. 500 — На сервере произошла ошибка.
 module.exports.updateUserInfo = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(
@@ -132,14 +133,14 @@ module.exports.updateUserInfo = (req, res, next) => {
       if (err.name === 'DocumentNotFoundError') {
         throw new NotFoundError('Пользователь по указанному _id не найден.');
       }
-      return new ServerError('Ошибка по умолчанию');
+      return new ServerError('На сервере произошла ошибка');
     })
     .catch(next);
 };
 
 // 400 — Переданы некорректные данные при обновлении аватара.
 // 404 — Пользователь с указанным _id не найден.
-// 500 — Ошибка по умолчанию.
+// 500 — На сервере произошла ошибка.
 module.exports.updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(
@@ -160,7 +161,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
       if (err.name === 'DocumentNotFoundError') {
         throw new NotFoundError('Пользователь по указанному _id не найден.');
       }
-      return new ServerError('Ошибка по умолчанию');
+      return new ServerError('На сервере произошла ошибка');
     })
     .catch(next);
 };
